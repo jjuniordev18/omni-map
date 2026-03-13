@@ -5,16 +5,21 @@ import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import { getAnalytics, isSupported } from 'firebase/analytics'
 
-// Chaves integradas (fornecidas)
 const firebaseConfig = {
-  apiKey: 'AIzaSyDEsjS1SVCNrQqHeWwtcIoPcI8CJRCtDVU',
-  authDomain: 'emergency-mapper-starter.firebaseapp.com',
-  projectId: 'emergency-mapper-starter',
-  // Correção do bucket: use o domínio appspot.com
-  storageBucket: 'emergency-mapper-starter.appspot.com',
-  messagingSenderId: '756381885332',
-  appId: '1:756381885332:web:f72f6a8353d45ab39f2581',
-  measurementId: 'G-G5GX6SL095'
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+}
+
+const required = ['apiKey', 'projectId', 'storageBucket', 'messagingSenderId', 'appId']
+const missing = required.filter(k => !firebaseConfig[k as keyof typeof firebaseConfig])
+
+if (missing.length > 0) {
+  console.error(`Firebase config missing: ${missing.join(', ')}. Create .env file based on .env.example`)
 }
 
 export const app = initializeApp(firebaseConfig)
